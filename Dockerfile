@@ -10,7 +10,7 @@ ENV GOSU_VERSION=1.12 \
 
 # grab gosu for easy step-down from root
 RUN apt-get -y update \
-    && apt-get install -y --no-install-recommends ca-certificates wget bzip2 python \
+    && apt-get install -y --no-install-recommends ca-certificates make wget bzip2 python \
     && rm -rf /var/lib/apt/lists/* \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
