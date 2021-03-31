@@ -39,7 +39,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 RUN cd /opt \
     && wget https://yarnpkg.com/latest.tar.gz \
     && tar zvxf latest.tar.gz \
-    && export PATH="$PATH:/opt/yarn-v1.22.4/bin"
+    && export PATH="$PATH:/opt/yarn-v1.22.5/bin"
 
 # get docker ce
 RUN apt-get -y update \
