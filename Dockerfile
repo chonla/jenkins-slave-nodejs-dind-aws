@@ -3,23 +3,22 @@ FROM openjdk:11-jdk
 ADD ./data /opt
 WORKDIR /opt
 
-ENV GOSU_VERSION=1.12 \
-    SWARM_VERSION=3.19 \
-    MD5=96c259096839cf95acd3db2f48d556df \
+ENV GOSU_VERSION=1.13 \
+    SWARM_VERSION=3.27 \
+    MD5=016be6aa789c9afd07b131cbb505beda \
     FINGER_PRINT=0EBFCD88
 
-# grab gosu for easy step-down from root
+# grab dependencies
 RUN apt-get -y update \
     && apt-get install -y --no-install-recommends ca-certificates make wget bzip2 python \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+    && rm -rf /var/lib/apt/lists/*
+
+# grab gosu for easy step-down from root
+RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
     && export GNUPGHOME="$(mktemp -d)" \
     && GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-    && gpg --keyserver hkp://:p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
-    || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
-    || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
-    || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" \
+    && gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEYS" \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
@@ -32,7 +31,7 @@ RUN mkdir -p /var/jenkins_home \
     && echo "$MD5  /bin/swarm-client.jar" | md5sum -c -
 
 # get node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
 # get yarn
