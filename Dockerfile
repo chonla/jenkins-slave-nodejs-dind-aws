@@ -52,6 +52,10 @@ RUN apt-get -y update \
     && apt-get -y update \
     && apt-get -y install docker-ce docker-ce-cli containerd.io
 
+# get docker compose
+RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
+
 # get jq
 RUN apt-get -y install jq
 
@@ -65,4 +69,3 @@ VOLUME /var/jenkins_home/slave
 WORKDIR /var/jenkins_home/slave
 
 ENTRYPOINT ["/opt/docker-entrypoint.sh"]
-# CMD ["java", "-jar", "/bin/swarm-client.jar"]
